@@ -1,4 +1,5 @@
 import React from 'react';
+import { HighlightCard } from '../../components/HighlightCard';
 import {
   Container,
   Header,
@@ -30,6 +31,7 @@ export function Dashboard(): JSX.Element {
           <Icon name="power" />
         </UserWrapper>
       </Header>
+      <HighlightCard />
     </Container>
   );
 }

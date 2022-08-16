@@ -10,6 +10,7 @@ import {
   UserGreeting,
   UserName,
   Icon,
+  HighlightCards,
 } from './styles';
 
 export function Dashboard(): JSX.Element {
@@ -31,7 +32,11 @@ export function Dashboard(): JSX.Element {
           <Icon name="power" />
         </UserWrapper>
       </Header>
-      <HighlightCard />
+      <HighlightCards>
+        <HighlightCard />
+        <HighlightCard />
+        <HighlightCard />
+      </HighlightCards>
     </Container>
   );
 }

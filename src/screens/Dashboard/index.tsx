@@ -8,6 +8,7 @@ import {
   User,
   UserGreeting,
   UserName,
+  Icon,
 } from './styles';
 
 export function Dashboard(): JSX.Element {
@@ -26,6 +27,7 @@ export function Dashboard(): JSX.Element {
               <UserName>Yuri</UserName>
             </User>
           </UserInfo>
+          <Icon name="power" />
         </UserWrapper>
       </Header>
     </Container>

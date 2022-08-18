@@ -9,7 +9,8 @@ import {
 } from '@expo-google-fonts/poppins';
 import * as SplashScreen from 'expo-splash-screen';
 import { View } from 'react-native';
-import { Register } from './src/screens/Register';
+import { AppRoutes } from './src/routes/app.routes';
+import { NavigationContainer } from '@react-navigation/native';
 
 export default function App(): JSX.Element | null {
   const [fontsLoaded] = useFonts({
@@ -39,7 +40,9 @@ export default function App(): JSX.Element | null {
   return (
     <ThemeProvider theme={theme}>
       <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
-        <Register />
+        <NavigationContainer>
+          <AppRoutes />
+        </NavigationContainer>
       </View>
     </ThemeProvider>
   );

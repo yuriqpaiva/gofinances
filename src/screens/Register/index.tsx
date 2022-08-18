@@ -1,10 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '../../components/Form/Button';
 import { Input } from '../../components/Form/Input';
+import { TransactionTypeButton } from '../../components/Form/TransactionTypeButton';
 
-import { Container, Header, Title, Form, Fields } from './styles';
+import {
+  Container,
+  Header,
+  Title,
+  Form,
+  Fields,
+  TransactionsTypes,
+} from './styles';
 
 export function Register(): JSX.Element {
+  const [transactionType, setTransactionType] = useState<'up' | 'down' | ''>(
+    '',
+  );
+
+  function handleTransactionTypeSelect(type: 'up' | 'down'): void {
+    setTransactionType(type);
+  }
+
   return (
     <Container>
       <Header>
@@ -14,6 +30,20 @@ export function Register(): JSX.Element {
         <Fields>
           <Input placeholder="Nome" />
           <Input placeholder="Preço" />
+          <TransactionsTypes>
+            <TransactionTypeButton
+              type="up"
+              title="Income"
+              onPress={() => handleTransactionTypeSelect('up')}
+              isActive={transactionType === 'up'}
+            />
+            <TransactionTypeButton
+              type="down"
+              title="Outcome"
+              onPress={() => handleTransactionTypeSelect('down')}
+              isActive={transactionType === 'down'}
+            />
+          </TransactionsTypes>
         </Fields>
 
         <Button title="Enviar" />

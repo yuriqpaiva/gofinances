@@ -73,7 +73,7 @@ export function Register(): JSX.Element {
       return Alert.alert('Selecione a categoria');
     }
 
-    const formattedData = {
+    const newTransactionData = {
       name: data.name,
       amount: data.amount,
       transactionType,
@@ -81,6 +81,11 @@ export function Register(): JSX.Element {
     };
 
     try {
+      const data = await AsyncStorage.getItem(dataKey);
+      const currentData = data !== null ? JSON.parse(data) : [];
+
+      const formattedData = [...currentData, newTransactionData];
+
       await AsyncStorage.setItem(dataKey, JSON.stringify(formattedData));
     } catch (error) {
       console.log(error);

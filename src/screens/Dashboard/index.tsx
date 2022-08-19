@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { HighlightCard } from '../../components/HighlightCard';
 import {
   TransactionCard,
   TransactionCardProps,
 } from '../../components/TransactionCard';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   Container,
   Header,
@@ -26,41 +27,42 @@ export interface DataListProps extends TransactionCardProps {
 }
 
 export function Dashboard(): JSX.Element {
-  const data: DataListProps[] = [
-    {
-      id: '1',
-      type: 'positive',
-      title: 'Desenvolvimento de site',
-      amount: 'R$ 12.000,00',
-      category: {
-        name: 'Vendas',
-        icon: 'dollar-sign',
+  const [data, setData] = useState<DataListProps[]>([]);
+
+  async function loadTransactions(): Promise<void> {
+    const dataKey = '@gofinances:transactions';
+    const response = await AsyncStorage.getItem(dataKey);
+    const transactions = response !== null ? JSON.parse(response) : [];
+
+    const transactionsFormatted: DataListProps[] = transactions.map(
+      (item: DataListProps) => {
+        const amount = Number(item.amount).toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+        });
+        const date = Intl.DateTimeFormat('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: '2-digit',
+        }).format(new Date(item.date));
+
+        return {
+          id: item.id,
+          name: item.name,
+          amount,
+          date,
+          type: item.type,
+          category: item.category,
+        };
       },
-      date: '13/04/2022',
-    },
-    {
-      id: '2',
-      type: 'negative',
-      title: 'Hamburgueria Pizzy',
-      amount: 'R$ 59,00',
-      category: {
-        name: 'Alimentação',
-        icon: 'coffee',
-      },
-      date: '10/04/2022',
-    },
-    {
-      id: '3',
-      type: 'negative',
-      title: 'R$ 1.200,00',
-      amount: 'R$ 12.000,00',
-      category: {
-        name: 'Casa',
-        icon: 'shopping-bag',
-      },
-      date: '22/04/2022',
-    },
-  ];
+    );
+
+    setData(transactionsFormatted);
+  }
+
+  useEffect(() => {
+    loadTransactions().finally(() => {});
+  }, []);
 
   return (
     <Container>
@@ -104,7 +106,7 @@ export function Dashboard(): JSX.Element {
       </HighlightCards>
 
       <Transactions>
-        <Title>Titulo</Title>
+        <Title>Listagem</Title>
         <TransactionList
           data={data}
           keyExtractor={item => item.id}

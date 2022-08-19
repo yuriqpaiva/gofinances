@@ -11,6 +11,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import { AppRoutes } from './src/routes/app.routes';
 import { NavigationContainer } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import 'intl';
+import 'intl/locale-data/jsonp/pt-BR';
 
 export default function App(): JSX.Element | null {
   const [fontsLoaded] = useFonts({

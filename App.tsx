@@ -11,6 +11,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { AppRoutes } from './src/routes/app.routes';
 import { NavigationContainer } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
 export default function App(): JSX.Element | null {
   const [fontsLoaded] = useFonts({
     Poppins_400Regular,

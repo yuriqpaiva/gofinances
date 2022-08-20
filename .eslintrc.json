@@ -26,6 +26,7 @@
     },
     "rules": {
         "@typescript-eslint/no-misused-promises": 0,
-        "@typescript-eslint/no-non-null-assertion": 0
+        "@typescript-eslint/no-non-null-assertion": 0,
+        "@typescript-eslint/consistent-type-assertions" : 0
     }
 }

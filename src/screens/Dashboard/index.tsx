@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { HighlightCard } from '../../components/HighlightCard';
 import {
   TransactionCard,
   TransactionCardProps,
 } from '../../components/TransactionCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 import {
   Container,
   Header,
@@ -32,6 +33,7 @@ export function Dashboard(): JSX.Element {
   async function loadTransactions(): Promise<void> {
     const dataKey = '@gofinances:transactions';
     const response = await AsyncStorage.getItem(dataKey);
+
     const transactions = response !== null ? JSON.parse(response) : [];
 
     const transactionsFormatted: DataListProps[] = transactions.map(
@@ -60,9 +62,12 @@ export function Dashboard(): JSX.Element {
     setData(transactionsFormatted);
   }
 
-  useEffect(() => {
-    loadTransactions().finally(() => {});
-  }, []);
+  // Call when this screen component mount and when user back to this Screen
+  useFocusEffect(
+    useCallback(() => {
+      loadTransactions().finally(() => {});
+    }, []),
+  );
 
   return (
     <Container>

@@ -41,9 +41,9 @@ const schema = yup.object().shape({
 export function Register(): JSX.Element {
   const { navigate }: NavigationProp<ParamListBase> = useNavigation();
 
-  const [transactionType, setTransactionType] = useState<'up' | 'down' | ''>(
-    '',
-  );
+  const [transactionType, setTransactionType] = useState<
+    'positive' | 'negative' | ''
+  >('');
 
   const [category, setCategory] = useState({
     key: 'category',
@@ -51,7 +51,7 @@ export function Register(): JSX.Element {
   });
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
 
-  function handleTransactionTypeSelect(type: 'up' | 'down'): void {
+  function handleTransactionTypeSelect(type: 'positive' | 'negative'): void {
     setTransactionType(type);
   }
 
@@ -84,7 +84,7 @@ export function Register(): JSX.Element {
       id: String(uuid.v4()),
       name: data.name,
       amount: data.amount,
-      transactionType,
+      type: transactionType,
       category: category.key,
       date: new Date(),
     };
@@ -137,14 +137,14 @@ export function Register(): JSX.Element {
               <TransactionTypeButton
                 type="up"
                 title="Income"
-                onPress={() => handleTransactionTypeSelect('up')}
-                isActive={transactionType === 'up'}
+                onPress={() => handleTransactionTypeSelect('positive')}
+                isActive={transactionType === 'positive'}
               />
               <TransactionTypeButton
                 type="down"
                 title="Outcome"
-                onPress={() => handleTransactionTypeSelect('down')}
-                isActive={transactionType === 'down'}
+                onPress={() => handleTransactionTypeSelect('negative')}
+                isActive={transactionType === 'negative'}
               />
             </TransactionsTypes>
             <CategorySelectButton

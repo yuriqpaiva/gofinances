@@ -42,6 +42,7 @@ interface CategoryData {
 
 export function Resume(): JSX.Element {
   const theme = useTheme();
+  const bottomTabBarHeight = useBottomTabBarHeight();
   const [isLoading, setIsLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>(
@@ -50,6 +51,7 @@ export function Resume(): JSX.Element {
 
   function handleDateChange(action: 'next' | 'prev'): void {
     setIsLoading(true);
+
     if (action === 'next') {
       setSelectedDate(addMonths(selectedDate, 1));
     } else {
@@ -137,7 +139,7 @@ export function Resume(): JSX.Element {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             paddingHorizontal: 24,
-            paddingBottom: useBottomTabBarHeight(),
+            paddingBottom: bottomTabBarHeight,
           }}>
           <MonthSelect>
             <MonthSelectButton onPress={() => handleDateChange('prev')}>

@@ -14,6 +14,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'intl';
 import 'intl/locale-data/jsonp/pt-BR';
 import { StatusBar } from 'react-native';
+import { SignIn } from './src/screens/SignIn';
 
 export default function App(): JSX.Element | null {
   const [fontsLoaded] = useFonts({
@@ -45,7 +46,8 @@ export default function App(): JSX.Element | null {
       <GestureHandlerRootView onLayout={onLayoutRootView} style={{ flex: 1 }}>
         <NavigationContainer>
           <StatusBar barStyle="light-content" />
-          <AppRoutes />
+          {/* <AppRoutes /> */}
+          <SignIn />
         </NavigationContainer>
       </GestureHandlerRootView>
     </ThemeProvider>

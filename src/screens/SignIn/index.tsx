@@ -13,8 +13,13 @@ import {
   FooterWrapper,
 } from './styles';
 import { SignInSocialButton } from '../../components/SignInSocialButton';
+import { useAuth } from '../../hooks/auth';
 
 export function SignIn(): JSX.Element {
+  const { user } = useAuth();
+
+  console.log(user);
+
   return (
     <Container>
       <Header>

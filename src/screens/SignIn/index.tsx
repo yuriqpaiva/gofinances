@@ -10,7 +10,9 @@ import {
   Title,
   SignInTitle,
   Footer,
+  FooterWrapper,
 } from './styles';
+import { SignInSocialButton } from '../../components/SignInSocialButton';
 
 export function SignIn(): JSX.Element {
   return (
@@ -29,7 +31,12 @@ export function SignIn(): JSX.Element {
         </SignInTitle>
       </Header>
 
-      <Footer></Footer>
+      <Footer>
+        <FooterWrapper>
+          <SignInSocialButton title="Entrar com Google" svg={GoogleSvg} />
+          <SignInSocialButton title="Entrar com Apple" svg={AppleSvg} />
+        </FooterWrapper>
+      </Footer>
     </Container>
   );
 }

@@ -3,9 +3,8 @@ import styled from 'styled-components/native';
 import { BorderlessButton } from 'react-native-gesture-handler';
 import { Feather } from '@expo/vector-icons';
 
-export const Container = styled.ScrollView`
+export const Container = styled.View`
   flex: 1;
-  flex-grow: 1;
   background-color: ${({ theme }) => theme.colors.background};
 `;
 
@@ -53,4 +52,10 @@ export const MonthSelectIcon = styled(Feather)`
 export const Month = styled.Text`
   font-family: ${({ theme }) => theme.fonts.regular};
   font-size: ${RFValue(20)}px;
+`;
+
+export const LoadingContainer = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
 `;

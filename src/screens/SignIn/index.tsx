@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ActivityIndicator, Alert } from 'react-native';
+import { ActivityIndicator, Alert, Platform } from 'react-native';
 import AppleSvg from '../../assets/apple.svg';
 import GoogleSvg from '../../assets/google.svg';
 import LogoSvg from '../../assets/logo.svg';
@@ -67,11 +67,13 @@ export function SignIn(): JSX.Element {
             svg={GoogleSvg}
             onPress={handleSignInWithGoogle}
           />
-          <SignInSocialButton
-            title="Entrar com Apple"
-            svg={AppleSvg}
-            onPress={handleSignInWithApple}
-          />
+          {Platform.OS === 'ios' && (
+            <SignInSocialButton
+              title="Entrar com Apple"
+              svg={AppleSvg}
+              onPress={handleSignInWithApple}
+            />
+          )}
           {isLoading && (
             <ActivityIndicator
               color={theme.colors.shape}

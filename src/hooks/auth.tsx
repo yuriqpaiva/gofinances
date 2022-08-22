@@ -56,7 +56,6 @@ function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     androidClientId: GOOGLE_ANDROID_CLIENT_ID,
     iosClientId: GOOGLE_IOS_CLIENT_ID,
     expoClientId: GOOGLE_EXPO_CLIENT_ID,
-    // scopes: ['profile', 'email'],
   });
 
   useEffect(() => {

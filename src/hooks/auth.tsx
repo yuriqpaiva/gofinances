@@ -12,14 +12,16 @@ WebBrowser.maybeCompleteAuthSession();
 interface User {
   id: string;
   email: string | null;
-  name: string | null | undefined;
-  photo: undefined;
+  name: string;
+  photo: string;
 }
 
 interface AuthContextData {
   user: User | null;
   signInWithGoogle: () => Promise<void>;
   signInWithApple: () => Promise<void>;
+  signOut: () => Promise<void>;
+  userStorageLoading: boolean;
 }
 
 export const AuthContext = createContext<AuthContextData>(
@@ -54,7 +56,7 @@ function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     androidClientId: GOOGLE_ANDROID_CLIENT_ID,
     iosClientId: GOOGLE_IOS_CLIENT_ID,
     expoClientId: GOOGLE_EXPO_CLIENT_ID,
-    scopes: ['profile', 'email'],
+    // scopes: ['profile', 'email'],
   });
 
   useEffect(() => {
@@ -82,7 +84,7 @@ function AuthProvider({ children }: AuthProviderProps): JSX.Element {
         id: userInfo.id,
         email: userInfo.email,
         name: userInfo.given_name,
-        photo: userInfo.photo,
+        photo: userInfo.picture,
       };
 
       await AsyncStorage.setItem(userStorageKey, JSON.stringify(userLogged));
@@ -101,11 +103,13 @@ function AuthProvider({ children }: AuthProviderProps): JSX.Element {
         ],
       });
 
+      const name = credential.fullName!.givenName!;
+      const photo = `https://ui-avatars.com/api/?name=${name}&length=1`;
       const userLogged = {
         id: String(credential.user),
         email: credential.email,
-        name: credential.fullName?.givenName,
-        photo: undefined,
+        name,
+        photo,
       };
 
       setUser(userLogged);
@@ -115,8 +119,20 @@ function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     }
   }
 
+  async function signOut(): Promise<void> {
+    setUser(null);
+    await AsyncStorage.removeItem(userStorageKey);
+  }
+
   return (
-    <AuthContext.Provider value={{ user, signInWithGoogle, signInWithApple }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        signInWithGoogle,
+        signInWithApple,
+        signOut,
+        userStorageLoading,
+      }}>
       {children}
     </AuthContext.Provider>
   );

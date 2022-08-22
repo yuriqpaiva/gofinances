@@ -1,9 +1,13 @@
-import React, { createContext, useContext, useState } from 'react';
-import * as AuthSession from 'expo-auth-session';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-const { CLIENT_ID } = process.env;
-const { REDIRECT_URI } = process.env;
+import * as Google from 'expo-auth-session/providers/google';
+import * as WebBrowser from 'expo-web-browser';
+const { GOOGLE_ANDROID_CLIENT_ID } = process.env;
+const { GOOGLE_IOS_CLIENT_ID } = process.env;
+const { GOOGLE_EXPO_CLIENT_ID } = process.env;
+
+WebBrowser.maybeCompleteAuthSession();
 
 interface User {
   id: string;
@@ -18,13 +22,6 @@ interface AuthContextData {
   signInWithApple: () => Promise<void>;
 }
 
-interface AuthorizationResponse {
-  params: {
-    access_token: string;
-  };
-  type: string;
-}
-
 export const AuthContext = createContext<AuthContextData>(
   {} as AuthContextData,
 );
@@ -36,33 +33,45 @@ interface AuthProviderProps {
 function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   const [user, setUser] = useState<User>({} as User);
 
+  const [, response, promptAsync] = Google.useAuthRequest({
+    androidClientId: GOOGLE_ANDROID_CLIENT_ID,
+    iosClientId: GOOGLE_IOS_CLIENT_ID,
+    expoClientId: GOOGLE_EXPO_CLIENT_ID,
+    scopes: ['profile', 'email'],
+  });
+
+  useEffect(() => {
+    if (response?.type === 'success') {
+      const { authentication } = response;
+      getGoogleUser(authentication!.accessToken).finally(() => {});
+    }
+  }, [response]);
+
   async function signInWithGoogle(): Promise<void> {
+    await promptAsync({ useProxy: true, showInRecents: true });
+  }
+
+  async function getGoogleUser(accessToken: string): Promise<void> {
     try {
-      const RESPONSE_TYPE = 'token';
-      const SCOPE = encodeURI('profile email');
+      const response = await fetch(
+        'https://www.googleapis.com/userinfo/v2/me',
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        },
+      );
+      const userInfo = await response.json();
 
-      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID!}&redirect_uri=${REDIRECT_URI!}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`;
-      const { type, params } = (await AuthSession.startAsync({
-        authUrl,
-      })) as AuthorizationResponse;
+      const userLogged = {
+        id: userInfo.id,
+        email: userInfo.email,
+        name: userInfo.given_name,
+        photo: userInfo.photo,
+      };
 
-      if (type === 'success') {
-        const response = await fetch(
-          `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${params.access_token}`,
-        );
-        const userInfo = await response.json();
-
-        const userLogged = {
-          id: userInfo.id,
-          email: userInfo.email,
-          name: userInfo.given_name,
-          photo: userInfo.photo,
-        };
-        await AsyncStorage.setItem(
-          '@gofinances:user',
-          JSON.stringify(userLogged),
-        );
-      }
+      await AsyncStorage.setItem(
+        '@gofinances:user',
+        JSON.stringify(userLogged),
+      );
     } catch (error) {
       throw new Error(error as string);
     }

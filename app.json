@@ -6,6 +6,17 @@
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "ios": {
+      "bundleIdentifier": "org.name.gofinances"
+    },
+    "android": {
+      "package": "org.name.gofinances"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "f02c8f56-cf16-4c55-b5cf-385170794f6a"
+      }
+    }
   }
 }

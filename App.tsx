@@ -8,13 +8,12 @@ import {
   useFonts,
 } from '@expo-google-fonts/poppins';
 import * as SplashScreen from 'expo-splash-screen';
-import { NavigationContainer } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'intl';
 import 'intl/locale-data/jsonp/pt-BR';
 import { StatusBar } from 'react-native';
-import { SignIn } from './src/screens/SignIn';
 import { AuthProvider } from './src/hooks/auth';
+import { Routes } from './src/routes';
 
 export default function App(): JSX.Element | null {
   const [fontsLoaded] = useFonts({
@@ -44,12 +43,10 @@ export default function App(): JSX.Element | null {
   return (
     <ThemeProvider theme={theme}>
       <GestureHandlerRootView onLayout={onLayoutRootView} style={{ flex: 1 }}>
-        <NavigationContainer>
-          <StatusBar barStyle="light-content" />
-          <AuthProvider>
-            <SignIn />
-          </AuthProvider>
-        </NavigationContainer>
+        <StatusBar barStyle="light-content" />
+        <AuthProvider>
+          <Routes />
+        </AuthProvider>
       </GestureHandlerRootView>
     </ThemeProvider>
   );

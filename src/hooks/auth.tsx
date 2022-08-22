@@ -17,7 +17,7 @@ interface User {
 }
 
 interface AuthContextData {
-  user: User;
+  user: User | null;
   signInWithGoogle: () => Promise<void>;
   signInWithApple: () => Promise<void>;
 }
@@ -31,7 +31,24 @@ interface AuthProviderProps {
 }
 
 function AuthProvider({ children }: AuthProviderProps): JSX.Element {
-  const [user, setUser] = useState<User>({} as User);
+  const [userStorageLoading, setUserStorageLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
+
+  const userStorageKey = '@gofinances:user';
+
+  useEffect(() => {
+    async function loadStorageData(): Promise<void> {
+      const userStorage = await AsyncStorage.getItem(userStorageKey);
+
+      if (userStorage !== null) {
+        const userLogged = JSON.parse(userStorage) as User;
+        setUser(userLogged);
+      }
+
+      setUserStorageLoading(false);
+    }
+    loadStorageData().finally(() => {});
+  }, []);
 
   const [, response, promptAsync] = Google.useAuthRequest({
     androidClientId: GOOGLE_ANDROID_CLIENT_ID,
@@ -68,10 +85,8 @@ function AuthProvider({ children }: AuthProviderProps): JSX.Element {
         photo: userInfo.photo,
       };
 
-      await AsyncStorage.setItem(
-        '@gofinances:user',
-        JSON.stringify(userLogged),
-      );
+      await AsyncStorage.setItem(userStorageKey, JSON.stringify(userLogged));
+      setUser(userLogged);
     } catch (error) {
       throw new Error(error as string);
     }
@@ -94,10 +109,7 @@ function AuthProvider({ children }: AuthProviderProps): JSX.Element {
       };
 
       setUser(userLogged);
-      await AsyncStorage.setItem(
-        '@gofinances:user',
-        JSON.stringify(userLogged),
-      );
+      await AsyncStorage.setItem(userStorageKey, JSON.stringify(userLogged));
     } catch (error) {
       throw new Error(error as string);
     }

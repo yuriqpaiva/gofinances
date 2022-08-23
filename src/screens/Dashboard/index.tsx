@@ -55,13 +55,21 @@ export function Dashboard(): JSX.Element {
   function getLastTransactionDate(
     collection: DataListProps[],
     type: 'positive' | 'negative',
-  ): string {
+  ): string | number {
+    const collectionFiltered = collection.filter(
+      transaction => transaction.type === type,
+    );
+
+    if (collectionFiltered.length === 0) {
+      return 0;
+    }
+
     const lastTransaction = new Date(
       Math.max.apply(
         Math,
-        collection
-          .filter(transaction => transaction.type === type)
-          .map(transaction => new Date(transaction.date).getTime()),
+        collectionFiltered.map(transaction =>
+          new Date(transaction.date).getTime(),
+        ),
       ),
     );
 
@@ -132,21 +140,28 @@ export function Dashboard(): JSX.Element {
           style: 'currency',
           currency: 'BRL',
         }),
-        lastTransaction: `Última entrada dia ${lastTransactionEntry}`,
+        lastTransaction:
+          lastTransactionEntry === 0
+            ? 'Não há transações'
+            : `Última entrada dia ${lastTransactionEntry}`,
       },
       expensive: {
         amount: expensiveTotal.toLocaleString('pt-BR', {
           style: 'currency',
           currency: 'BRL',
         }),
-        lastTransaction: `Última entrada dia ${lastTransactionExpensive}`,
+        lastTransaction:
+          lastTransactionExpensive === 0
+            ? 'Não há transações'
+            : `Última entrada dia ${lastTransactionExpensive}`,
       },
       total: {
         amount: total.toLocaleString('pt-BR', {
           style: 'currency',
           currency: 'BRL',
         }),
-        lastTransaction: totalInterval,
+        lastTransaction:
+          lastTransactionExpensive === 0 ? 'Não há transações' : totalInterval,
       },
     });
     setIsLoading(false);

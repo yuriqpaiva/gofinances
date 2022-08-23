@@ -23,6 +23,7 @@ import {
   Fields,
   TransactionsTypes,
 } from './styles';
+import { useAuth } from '../../hooks/auth';
 
 interface FormData {
   name: string;
@@ -39,6 +40,8 @@ const schema = yup.object().shape({
 });
 
 export function Register(): JSX.Element {
+  const { user } = useAuth();
+
   const { navigate }: NavigationProp<ParamListBase> = useNavigation();
 
   const [transactionType, setTransactionType] = useState<
@@ -90,7 +93,7 @@ export function Register(): JSX.Element {
     };
 
     try {
-      const dataKey = '@gofinances:transactions';
+      const dataKey = `@gofinances:transactions_${user!.id}`;
 
       const data = await AsyncStorage.getItem(dataKey);
       const currentData = data !== null ? JSON.parse(data) : [];

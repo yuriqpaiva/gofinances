@@ -22,6 +22,7 @@ import {
   LoadingContainer,
 } from './styles';
 import { useFocusEffect } from '@react-navigation/native';
+import { useAuth } from '../../hooks/auth';
 
 interface TransactionData {
   type: 'positive' | 'negative';
@@ -41,6 +42,8 @@ interface CategoryData {
 }
 
 export function Resume(): JSX.Element {
+  const { user } = useAuth();
+
   const theme = useTheme();
   const bottomTabBarHeight = useBottomTabBarHeight();
   const [isLoading, setIsLoading] = useState(true);
@@ -60,7 +63,8 @@ export function Resume(): JSX.Element {
   }
 
   async function loadData(): Promise<void> {
-    const dataKey = '@gofinances:transactions';
+    const dataKey = `@gofinances:transactions_${user!.id}`;
+
     const response = await AsyncStorage.getItem(dataKey);
     const responseFormatted = response !== null ? JSON.parse(response) : [];
 

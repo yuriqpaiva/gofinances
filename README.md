@@ -20,7 +20,7 @@
 
 ## 💡 Introduction
 
-Mobile application made with React Nativo to manage your personal finances
+Mobile application made with React Native to manage your personal finances
 
 1. Sign In with Google or Apple
 2. Register a Outcome or Income transaction

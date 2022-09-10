@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Google from 'expo-auth-session/providers/google';
+import { useAuthRequest } from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
 const { GOOGLE_ANDROID_CLIENT_ID } = process.env;
 const { GOOGLE_IOS_CLIENT_ID } = process.env;
 const { GOOGLE_EXPO_CLIENT_ID } = process.env;
+const { REDIRECT_URI } = process.env;
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -52,16 +53,17 @@ function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     loadStorageData().finally(() => {});
   }, []);
 
-  const [, response, promptAsync] = Google.useAuthRequest({
+  const [, response, promptAsync] = useAuthRequest({
     androidClientId: GOOGLE_ANDROID_CLIENT_ID,
     iosClientId: GOOGLE_IOS_CLIENT_ID,
     expoClientId: GOOGLE_EXPO_CLIENT_ID,
+    redirectUri: REDIRECT_URI,
   });
 
   useEffect(() => {
     if (response?.type === 'success') {
       const { authentication } = response;
-      getGoogleUser(authentication!.accessToken).finally(() => {});
+      getGoogleUser(authentication!.accessToken);
     }
   }, [response]);
 

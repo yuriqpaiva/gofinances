@@ -153,10 +153,14 @@ export function Register(): JSX.Element {
             <CategorySelectButton
               title={category.name}
               onPress={handleOpenSelectCategory}
+              testID="category-button"
             />
           </Fields>
 
-          <Modal visible={categoryModalOpen} animationType="slide">
+          <Modal
+            visible={categoryModalOpen}
+            animationType="slide"
+            testID="category-modal">
             <CategorySelect
               category={category}
               setCategory={setCategory}

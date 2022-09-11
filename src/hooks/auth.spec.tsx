@@ -88,4 +88,22 @@ describe('Auth Hook', () => {
 
     expect(result.current?.user).toEqual(null);
   });
+
+  it('should returns error when Google SignIn fails', async () => {
+    const googleMocked = mocked(useAuthRequest as any);
+    googleMocked.mockReturnValue([
+      { foo: true },
+      { type: 'success', authentication: { accessToken: 'mock_token' } },
+      jest.fn(),
+    ]);
+
+    global.fetch = jest.fn().mockImplementation(() => {
+      throw new Error();
+    });
+
+    const { result } = renderHook(() => useAuth(), { wrapper: AuthProvider });
+
+    await act(async () => await result.current.signInWithGoogle());
+    expect(result.current.user).toEqual(null);
+  });
 });

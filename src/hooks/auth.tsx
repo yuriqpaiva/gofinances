@@ -79,6 +79,7 @@ function AuthProvider({ children }: AuthProviderProps): JSX.Element {
           headers: { Authorization: `Bearer ${accessToken}` },
         },
       );
+
       const userInfo = await response.json();
 
       const userLogged = {

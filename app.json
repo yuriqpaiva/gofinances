@@ -1,22 +1,33 @@
 {
   "expo": {
     "name": "gofinances",
+    "icon": "./assets/logo.png",
     "slug": "gofinances",
     "scheme": "gofinances",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
     ],
+    "splash": {
+      "image": "./assets/splash.png",
+      "backgroundColor": "#5636D3"
+    },
     "ios": {
-      "bundleIdentifier": "org.name.gofinances"
+      "bundleIdentifier": "com.gofinances",
+      "buildNumber": "1.0.0"
     },
     "android": {
-      "package": "org.name.gofinances"
+      "package": "com.gofinances",
+      "versionCode": 1
     },
     "extra": {
       "eas": {
         "projectId": "f02c8f56-cf16-4c55-b5cf-385170794f6a"
       }
+    },
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/f02c8f56-cf16-4c55-b5cf-385170794f6a"
     }
   }
 }
